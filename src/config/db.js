@@ -1,4 +1,4 @@
-import {Database} from 'sqlite-async';
+import { Database } from 'sqlite-async';
 
 async function initializeDatabase() {
     const db = await Database.open('./exercise-tracker.db');
