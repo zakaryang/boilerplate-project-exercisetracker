@@ -58,7 +58,8 @@ class ExerciseService {
             params.push(from || "1970-01-01", to || "9999-12-31");
         }
 
-        query += " ORDER BY date DESC";
+        // Sort by date in ascending order (oldest first)
+        query += " ORDER BY date ASC";
 
         if (limit) {
             query += " LIMIT ?";
