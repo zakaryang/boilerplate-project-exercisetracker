@@ -4,11 +4,12 @@ class UserService {
     }
 
     async createUser(username) {
-        if (!username) {
+        const trimmedUsername = username?.trim();
+        if (!trimmedUsername) {
             throw new Error("Username is required");
         }
 
-        const result = await this.db.run("INSERT INTO users (username) VALUES (?)", [username]);
+        const result = await this.db.run("INSERT INTO users (username) VALUES (?)", [trimmedUsername]);
         const user = await this.db.get("SELECT _id, username FROM users WHERE _id = ?", [result.lastID]);
         
         return {
