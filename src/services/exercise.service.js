@@ -36,6 +36,20 @@ class ExerciseService {
     async getExerciseLog(userId, from, to, limit) {
         const user = await this.userService.getUserById(userId);
         
+        // Base query for counting total exercises
+        let countQuery = "SELECT COUNT(*) as total FROM exercises WHERE user_id = ?";
+        const countParams = [userId];
+
+        if (from || to) {
+            countQuery += " AND date BETWEEN ? AND ?";
+            countParams.push(from || "1970-01-01", to || "9999-12-31");
+        }
+
+        // Get total count before applying limit
+        const countResult = await this.db.get(countQuery, countParams);
+        const totalCount = countResult.total;
+
+        // Query for getting exercises with limit
         let query = "SELECT description, duration, date FROM exercises WHERE user_id = ?";
         const params = [userId];
 
@@ -56,7 +70,7 @@ class ExerciseService {
         return {
             _id: user._id.toString(), // freeCodeCamp requires _id to be a string
             username: user.username,
-            count: exercises.length,
+            count: totalCount,
             log: exercises.map(exercise => ({
                 ...exercise,
                 duration: parseInt(exercise.duration),
