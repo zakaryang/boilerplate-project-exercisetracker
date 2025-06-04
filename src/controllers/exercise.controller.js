@@ -19,6 +19,8 @@ class ExerciseController {
         } catch (error) {
             if (error.message === "Description and duration are required") {
                 res.status(400).json({ error: error.message });
+            } else if (error.message === "Duration must be a positive number") {
+                res.status(400).json({ error: error.message });
             } else if (error.message === "User not found") {
                 res.status(404).json({ error: error.message });
             } else {

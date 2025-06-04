@@ -9,6 +9,11 @@ class ExerciseService {
             throw new Error("Description and duration are required");
         }
 
+        const durationNum = Number(duration);
+        if (isNaN(durationNum) || durationNum <= 0) {
+            throw new Error("Duration must be a positive number");
+        }
+
         const user = await this.userService.getUserById(userId);
         
         const exerciseDate = date ? new Date(date) : new Date();
@@ -16,14 +21,14 @@ class ExerciseService {
         
         await this.db.run(
             "INSERT INTO exercises (user_id, description, duration, date) VALUES (?, ?, ?, ?)",
-            [userId, description, duration, storedDate]
+            [userId, description, durationNum, storedDate]
         );
 
         return {
             _id: user._id.toString(),
             username: user.username,
             description,
-            duration: parseInt(duration),
+            duration: durationNum,
             date: exerciseDate.toDateString()
         };
     }
